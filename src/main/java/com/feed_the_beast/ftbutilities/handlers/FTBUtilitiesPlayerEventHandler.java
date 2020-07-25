@@ -153,7 +153,7 @@ public class FTBUtilitiesPlayerEventHandler
 		ClaimedChunk chunk = ClaimedChunks.instance.getChunk(new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
 		ForgeTeam team = chunk == null ? null : chunk.getTeam();
 		short teamID = team == null ? 0 : team.getUID();
-		if (team != null && !p.hasTeam() || !team.equalsTeam(p.team)) {
+		if (team != null && (!p.hasTeam() || !team.equalsTeam(p.team))) {
 			FTBUtilitiesNotifications.notifyFaction(p,team,true);
 		}
 		FTBUtilitiesNotifications.updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
@@ -161,7 +161,7 @@ public class FTBUtilitiesPlayerEventHandler
 		chunk = ClaimedChunks.instance.getChunk(new ChunkDimPos(event.getOldChunkZ(), event.getOldChunkZ(), player.dimension));
 		team = chunk == null ? null : chunk.getTeam();
 		teamID = team == null ? 0 : team.getUID();
-		if (team != null && !p.hasTeam() || !team.equalsTeam(p.team)) {
+		if (team != null && (!p.hasTeam() || !team.equalsTeam(p.team))) {
 			FTBUtilitiesNotifications.notifyFaction(p,team,false);
 		}
 		
