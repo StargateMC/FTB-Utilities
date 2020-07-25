@@ -40,13 +40,15 @@ public class FTBUtilitiesNotifications
 		String prefix = "";
 		if (team.isAlly(intruder)) prefix += "(Ally)";
 		if (team.isEnemy(intruder)) prefix += "(Enemy)";
-		if (!intruder.hasTeam()) prefix += "(Clanless)";
-		if (intruder.hasTeam()) prefix += "(Neutral)";
+		if (prefix.length() <= 1) {
+			if (!intruder.hasTeam()) prefix += "(Clanless)";
+			if (intruder.hasTeam()) prefix += "(Neutral)";
+		}
 		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(intruder.getPlayer().world.provider.getDimension());
 		String msg = (intruder.getName() + " " + prefix + " has " + (entering ? "entered" : "left") + " your clans territory " + (intruder.getPlayer().world.provider.getDimension() == -2 ? "in" : "on") + " " + props.getName());
 		for (ForgePlayer player : team.getMembers()) {
 			if (player.isOnline()) {
-				CoreAPI.sendMessage(player.getPlayer(), msg, true);
+				CoreAPI.sendChat(player.getPlayer(), msg);
 			} else {
 				CoreAPI.messagePlayerOffline(player.getId(), msg);
 			}
