@@ -229,99 +229,27 @@ public class ClaimedChunks
 
 	public static boolean canAttackEntity(EntityPlayer player, Entity target)
 	{
-		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
-		{
-			return true;
-		}
-		else if (target instanceof EntityPlayer)
-		{
-			if (FTBUtilitiesConfig.world.safe_spawn && player.world.provider.getDimension() == 0 && FTBUtilitiesUniverseData.isInSpawn(instance.universe.server, new ChunkDimPos(target)))
-			{
-				return false;
-			}
-			else if (FTBUtilitiesConfig.world.enable_pvp.isDefault())
-			{
-				return FTBUtilitiesPlayerData.get(instance.universe.getPlayer(player)).enablePVP() && FTBUtilitiesPlayerData.get(instance.universe.getPlayer(target)).enablePVP();
-			}
-
-			return FTBUtilitiesConfig.world.enable_pvp.isTrue();
-		}
-		else if (!(target instanceof IMob))
-		{
-			ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(target));
-
-			return chunk == null
-					|| PermissionAPI.hasPermission(player, FTBUtilitiesPermissions.CLAIMS_ATTACK_ANIMALS)
-					|| chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getAttackEntitiesStatus());
-		}
-
 		return true;
 	}
 
 	public static boolean blockBlockEditing(EntityPlayer player, BlockPos pos, @Nullable IBlockState state)
 	{
-		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
-		{
-			return false;
-		}
-
-		if (state == null)
-		{
-			state = player.world.getBlockState(pos);
-		}
-
-		ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(pos, player.dimension));
-
-		return chunk != null
-				&& !FTBUtilitiesPermissions.hasBlockEditingPermission(player, state.getBlock())
-				&& !chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getEditBlocksStatus());
+		return false;
 	}
 
 	public static boolean blockBlockInteractions(EntityPlayer player, BlockPos pos, @Nullable IBlockState state)
 	{
-		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
-		{
-			return false;
-		}
-
-		if (state == null)
-		{
-			state = player.world.getBlockState(pos);
-		}
-
-		ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(pos, player.dimension));
-		return chunk != null
-				&& !FTBUtilitiesPermissions.hasBlockInteractionPermission(player, state.getBlock())
-				&& !chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getInteractWithBlocksStatus());
+		return false;
 	}
 
 	public static boolean blockItemUse(EntityPlayer player, EnumHand hand, BlockPos pos)
 	{
-		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP) || player.getHeldItem(hand).isEmpty())
-		{
-			return false;
-		}
-
-		ClaimedChunk chunk = instance.getChunk(new ChunkDimPos(pos, player.dimension));
-		return chunk != null
-				&& !FTBUtilitiesPermissions.hasItemUsePermission(player, player.getHeldItem(hand).getItem())
-				&& !chunk.getTeam().hasStatus(instance.universe.getPlayer(player), chunk.getData().getUseItemsStatus());
+		return false;
 	}
 
 	public boolean canPlayerModify(ForgePlayer player, ChunkDimPos pos, String perm)
 	{
-		ClaimedChunk chunk = getChunk(pos);
-
-		if (chunk == null)
-		{
-			return true;
-		}
-		else if (FTBUtilitiesConfig.world.blockDimension(pos.dim))
-		{
-			return false;
-		}
-
-		return player.hasTeam() && chunk.getTeam().equalsTeam(player.team) || perm.isEmpty() || player.hasPermission(perm);
+		return true;
 	}
 
 	public ClaimResult claimChunk(ForgePlayer player, ChunkDimPos pos)
