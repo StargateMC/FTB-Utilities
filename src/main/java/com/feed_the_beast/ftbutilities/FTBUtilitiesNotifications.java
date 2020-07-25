@@ -12,6 +12,7 @@ import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.stargatemc.api.CoreAPI;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
@@ -37,22 +38,7 @@ public class FTBUtilitiesNotifications
 	}
 
 	public static void notifyFaction(ForgePlayer intruder, ForgeTeam team, boolean entering) {
-		String prefix = "";
-		if (team.isAlly(intruder)) prefix += "(Ally)";
-		if (team.isEnemy(intruder)) prefix += "(Enemy)";
-		if (prefix.length() <= 1) {
-			if (!intruder.hasTeam()) prefix += "(Clanless)";
-			if (intruder.hasTeam()) prefix += "(Neutral)";
-		}
-		DimensionProperties props = DimensionManager.getInstance().getDimensionProperties(intruder.getPlayer().world.provider.getDimension());
-		String msg = (intruder.getName() + " " + prefix + " has " + (entering ? "entered" : "left") + " your clans territory " + (intruder.getPlayer().world.provider.getDimension() == -2 ? "in" : "on") + " " + props.getName());
-		for (ForgePlayer player : team.getMembers()) {
-			if (player.isOnline()) {
-				CoreAPI.sendChat(player.getPlayer(), msg);
-			} else {
-				CoreAPI.messagePlayerOffline(player.getId(), msg);
-			}
-		}
+		return;
 	}
 	
 	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)

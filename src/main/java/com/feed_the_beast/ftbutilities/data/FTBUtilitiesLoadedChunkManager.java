@@ -161,7 +161,11 @@ public class FTBUtilitiesLoadedChunkManager implements ForgeChunkManager.Loading
 			return;
 		}
 
-		ForgeChunkManager.unforceChunk(ticket, pos.getChunkPos());
+		try {
+			ForgeChunkManager.unforceChunk(ticket, pos.getChunkPos());
+		} catch (Exception e) {
+			FTBUtilities.LOGGER.info(chunk.getTeam().getTitle().getUnformattedText() + " failed to be unforced at " + pos.posX + "," + pos.posZ + " in " + ServerUtils.getDimensionName(pos.dim).getUnformattedText());
+		}
 		chunkTickets.remove(pos);
 		chunk.forced = false;
 
