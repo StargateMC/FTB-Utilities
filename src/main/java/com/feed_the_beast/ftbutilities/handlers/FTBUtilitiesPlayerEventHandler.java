@@ -5,6 +5,7 @@ import com.feed_the_beast.ftblib.events.player.ForgePlayerDataEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedInEvent;
 import com.feed_the_beast.ftblib.events.player.ForgePlayerLoggedOutEvent;
 import com.feed_the_beast.ftblib.lib.data.ForgePlayer;
+import com.feed_the_beast.ftblib.lib.data.ForgeTeam;
 import com.feed_the_beast.ftblib.lib.data.Universe;
 import com.feed_the_beast.ftblib.lib.math.BlockDimPos;
 import com.feed_the_beast.ftblib.lib.math.ChunkDimPos;
@@ -15,6 +16,7 @@ import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesConfig;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
+import com.feed_the_beast.ftbutilities.data.ClaimedChunk;
 import com.feed_the_beast.ftbutilities.data.ClaimedChunks;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesPlayerData;
 import com.feed_the_beast.ftbutilities.data.FTBUtilitiesUniverseData;
@@ -145,9 +147,24 @@ public class FTBUtilitiesPlayerEventHandler
 		{
 			return;
 		}
-
 		FTBUtilitiesPlayerData.get(p).setLastSafePos(new BlockDimPos(player));
+		
+
+		ClaimedChunk chunk = ClaimedChunks.instance.getChunk(new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
+		ForgeTeam team = chunk == null ? null : chunk.getTeam();
+		short teamID = team == null ? 0 : team.getUID();
+		if (team != null && !p.hasTeam() || !team.equalsTeam(p.team)) {
+			FTBUtilitiesNotifications.notifyFaction(p,team,true);
+		}
 		FTBUtilitiesNotifications.updateChunkMessage(player, new ChunkDimPos(event.getNewChunkX(), event.getNewChunkZ(), player.dimension));
+		
+		chunk = ClaimedChunks.instance.getChunk(new ChunkDimPos(event.getOldChunkZ(), event.getOldChunkZ(), player.dimension));
+		team = chunk == null ? null : chunk.getTeam();
+		teamID = team == null ? 0 : team.getUID();
+		if (team != null && !p.hasTeam() || !team.equalsTeam(p.team)) {
+			FTBUtilitiesNotifications.notifyFaction(p,team,false);
+		}
+		
 	}
 
 	@SubscribeEvent

@@ -27,6 +27,8 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
+import zmaster587.advancedRocketry.dimension.DimensionManager;
+
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
@@ -165,11 +167,15 @@ public class GuiClaimedChunks extends GuiChunkSelectorBase
 		}
 	}
 
-	private final String currentDimName;
+	private String currentDimName = "Unknown";
 
 	public GuiClaimedChunks()
 	{
-		currentDimName = ServerUtils.getDimensionName(Minecraft.getMinecraft().world.provider.getDimension()).getFormattedText();
+		try {
+			currentDimName = DimensionManager.getInstance().getDimensionProperties(Minecraft.getMinecraft().world.provider.getDimension()).getName();
+		} catch (Exception e) {
+		}
+		
 	}
 
 	@Override

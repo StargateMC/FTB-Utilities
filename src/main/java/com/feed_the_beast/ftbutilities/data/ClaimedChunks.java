@@ -10,6 +10,9 @@ import com.feed_the_beast.ftbutilities.FTBUtilitiesNotifications;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
 import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
 import com.feed_the_beast.ftbutilities.net.MessageClaimedChunksUpdate;
+import com.stargatemc.api.CoreAPI;
+import com.stargatemc.data.LocationData;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.IMob;
@@ -268,6 +271,9 @@ public class ClaimedChunks
 			return ClaimResult.DIMENSION_BLOCKED;
 		}
 
+		if (LocationData.isPositionProtected(CoreAPI.getWorldForDimension(pos.dim), pos.getBlockPos(100).getBlockPos())) {
+			return ClaimResult.SERVER_PROTECTED;
+		}
 		FTBUtilitiesTeamData data = FTBUtilitiesTeamData.get(player.team);
 
 		if (checkLimits && !player.hasPermission(FTBUtilitiesPermissions.CLAIMS_BYPASS_LIMITS))
