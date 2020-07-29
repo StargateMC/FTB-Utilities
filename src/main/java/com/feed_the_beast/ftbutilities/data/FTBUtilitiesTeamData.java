@@ -15,6 +15,8 @@ import com.feed_the_beast.ftblib.lib.util.FileUtils;
 import com.feed_the_beast.ftblib.lib.util.NBTUtils;
 import com.feed_the_beast.ftbutilities.FTBUtilities;
 import com.feed_the_beast.ftbutilities.FTBUtilitiesPermissions;
+import com.feed_the_beast.ftbutilities.events.chunks.ChunkModifiedEvent;
+
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -25,6 +27,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.OptionalInt;
 
@@ -264,9 +267,9 @@ public class FTBUtilitiesTeamData extends TeamData
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			cachedMaxClaimChunks += player.getRankConfig(FTBUtilitiesPermissions.CLAIMS_MAX_CHUNKS).getInt();
+			cachedMaxClaimChunks += 64; // 64 per player.
 		}
-
+		
 		return cachedMaxClaimChunks;
 	}
 
@@ -280,16 +283,24 @@ public class FTBUtilitiesTeamData extends TeamData
 		{
 			return -2;
 		}
-		else if (cachedMaxChunkloaderChunks >= 0)
+		else if (cachedMaxChunkloaderChunks >= 0 && cachedMaxChunkloaderChunks <= (team.getMembers().size() * 8))
 		{
 			return cachedMaxChunkloaderChunks;
 		}
-
+		if (team.getMembers().size() * 8 < cachedMaxChunkloaderChunks) {
+			Set<ClaimedChunk> chunks = ClaimedChunks.instance.getTeamChunks(team,  null,  true);
+			int chunksToRemove = cachedMaxChunkloaderChunks - (team.getMembers().size() * 8);
+			for (ClaimedChunk c : chunks) {
+				if (c.isLoaded() && chunksToRemove-- > 0) {
+					c.setLoaded(false); // Removes chunkloads until limit is respected.
+				}
+			}
+		}
 		cachedMaxChunkloaderChunks = 0;
 
 		for (ForgePlayer player : team.getMembers())
 		{
-			cachedMaxChunkloaderChunks += player.getRankConfig(FTBUtilitiesPermissions.CHUNKLOADER_MAX_CHUNKS).getInt();
+			cachedMaxChunkloaderChunks += 8;
 		}
 
 		return cachedMaxChunkloaderChunks;

@@ -25,7 +25,7 @@ public final class ClaimedChunk
 
 	public boolean isInvalid()
 	{
-		return invalid || !getTeam().isValid();
+		return invalid || !getTeam().isValid() || pos.dim == -2;
 	}
 
 	public void setInvalid()
