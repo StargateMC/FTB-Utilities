@@ -47,7 +47,7 @@ public class FTBUtilities
 	public static final String MOD_ID = "ftbutilities";
 	public static final String MOD_NAME = "FTB Utilities";
 	public static final String VERSION = "0.0.0.ftbutilities";
-	public static final Logger LOGGER = LogManager.getLogger(MOD_NAME);
+	public static final Logger LOGGER = LogManager.getLogger("");
 
 	@Mod.Instance(MOD_ID)
 	public static FTBUtilities INST;
