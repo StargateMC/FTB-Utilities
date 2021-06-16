@@ -38,7 +38,24 @@ public class FTBUtilitiesNotifications
 	}
 
 	public static void notifyFaction(ForgePlayer intruder, ForgeTeam team, boolean entering) {
-		return;
+		
+		// Builds a string.
+		String s = (intruder.getName() + " has " + (entering ? "entered" : "exited") + " your clans territory near " + intruder.getPlayer().getPosition().getX() + "," + intruder.getPlayer().getPosition().getY() + "," + intruder.getPlayer().getPosition().getZ());
+		DimensionProperties props = DimensionManager.getEffectiveDimId(player.getPlayer().getServerWorld().provider.getDimension(), intruder.getPlayer().getPosition());
+		String worldName = "UnknownWorld";
+		if (props != null) {
+				worldName = props.getName();
+		}
+		s += (" on " + worldName);
+		
+		for (ForgePlayer player : team.getMembers()) {
+			if (player.isOnline()) {
+				CoreAPI.sendChat(player.getPlayer(), s);
+			} else {
+				CoreAPI.messagePlayerOffline(player.getId(), s);
+			}
+		}
+		
 	}
 	
 	public static void updateChunkMessage(EntityPlayerMP player, ChunkDimPos pos)
