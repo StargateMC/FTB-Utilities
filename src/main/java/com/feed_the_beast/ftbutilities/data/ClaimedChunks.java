@@ -232,6 +232,7 @@ public class ClaimedChunks
 
 	public static boolean canAttackEntity(EntityPlayer player, Entity target)
 	{
+		if (!PerWorldData.isCreative(player.world)) return; 
 		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
 		{
 			return true;
@@ -263,6 +264,7 @@ public class ClaimedChunks
 
 	public static boolean blockBlockEditing(EntityPlayer player, BlockPos pos, @Nullable IBlockState state)
 	{
+		if (!PerWorldData.isCreative(player.world)) return; 
 		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
 		{
 			return false;
@@ -282,6 +284,7 @@ public class ClaimedChunks
 
 	public static boolean blockBlockInteractions(EntityPlayer player, BlockPos pos, @Nullable IBlockState state)
 	{
+		if (!PerWorldData.isCreative(player.world)) return; 
 		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP))
 		{
 			return false;
@@ -300,6 +303,7 @@ public class ClaimedChunks
 
 	public static boolean blockItemUse(EntityPlayer player, EnumHand hand, BlockPos pos)
 	{
+		if (!PerWorldData.isCreative(player.world)) return; 
 		if (!isActive() || player.world == null || !(player instanceof EntityPlayerMP) || player.getHeldItem(hand).isEmpty())
 		{
 			return false;
@@ -313,6 +317,7 @@ public class ClaimedChunks
 
 	public boolean canPlayerModify(ForgePlayer player, ChunkDimPos pos, String perm)
 	{
+		if (!PerWorldData.isCreative(player.world)) return; 
 		ClaimedChunk chunk = getChunk(pos);
 
 		if (chunk == null)
